@@ -1,0 +1,18 @@
+# Scenario Analysis Template
+name: scenario_analysis
+version: "1.0"
+description: Template for analyzing legal scenarios
+
+template: |
+  Analyze the following legal scenario under Indian law.
+
+  Context:
+  {context}
+
+  Scenario: {question}
+
+  Provide:
+  - Applicable legal provisions (with section numbers)
+  - Analysis of how the law applies to this scenario
+  - Potential legal consequences
+  - Any procedural requirements

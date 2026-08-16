@@ -1,0 +1,18 @@
+# Cross-Act Analysis Template
+name: cross_act
+version: "1.0"
+description: Template for cross-act comparison and analysis
+
+template: |
+  Compare and analyze provisions across multiple Indian legal acts.
+
+  Context:
+  {context}
+
+  Question: {question}
+
+  Provide:
+  - Relevant sections from each applicable act (BNS, BNSS, BSA)
+  - How the provisions interact or complement each other
+  - Any conflicts or overlaps between acts
+  - Practical implications

@@ -1,0 +1,18 @@
+# Direct Lookup Template
+name: direct_lookup
+version: "1.0"
+description: Template for direct section lookup queries
+
+template: |
+  Based on the following legal context, answer the user's question about specific
+  sections of Indian law.
+
+  Context:
+  {context}
+
+  Question: {question}
+
+  Provide:
+  - The relevant section text
+  - A clear explanation in plain language
+  - Any related or connected sections
