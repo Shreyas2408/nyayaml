@@ -1,11 +1,11 @@
 name: CI
 on:
   push:
-    branchess: [main]
+    branches: [main]
   pull_request:
 
 jobs:
-  linit:
+  lint:
     runs-on: ubuntu-latest
     defaults:
       run:
