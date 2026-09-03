@@ -1,0 +1,9 @@
+{
+    "name": "nyayaml-frontend",
+    "private": true,
+    "version": "0.1.0",
+    "scripts": {
+        "dev": "echo Phase 0 stub",
+        "build": "echo Phase 0 stub"
+    }
+}

@@ -1,0 +1,13 @@
+name: Benchmark
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Phase 0 placeholder
+          run: echo "Evaluation suite will run here in later phase."
