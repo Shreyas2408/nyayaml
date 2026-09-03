@@ -1,6 +1,6 @@
 """Auth schemas — Pydantic models for request/response validation."""
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class UserCreate(BaseModel):
