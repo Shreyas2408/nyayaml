@@ -1,5 +1,32 @@
-pypdf==5.1.0
-sentence-transformers==3.3.1
-qdrant-client==1.12.1
+# pypdf==5.1.0
+# sentence-transformers==3.3.1
+# qdrant-client==1.12.1
+# rank-bm25==0.2.2
+# pyyaml==6.0.2
+
+# NyayaML - ingestion runtime dependecnies
+#Local : Python .venv ie python 3.10.11
+
+#Luer 0: deterministic acquisition
+pdfplumber==0.11.10
+# the above is chosen fo per-word boudning Boxex: page number and footnote, dection is a geometry problem, not a string problem
+
+#--LLayer 2: TOC-oracle title recovery
+rapidfuzz==3.14.5
+
+
+#-- Layer 6: dense embeddings (BGE-base-en-v1.5, 768dim, 512 token)--
+sentence-transformers==5.6.1
+
+# -- Layer 7 : vector store
+qdrant-client==1.19.0
+
+#sparse retrival , ie hybrid fusion
 rank-bm25==0.2.2
-pyyaml==6.0.2
+
+# -- config
+pyyaml==6.0.3
+
+PyMuPDF==1.26.6
+pdfplumber==0.11.8
+tokenizers==0.22.1
