@@ -1,0 +1,14 @@
+{
+  "chunks": 1839,
+  "maximum_tokens": 511,
+  "text_characters_partitioned": 1103286,
+  "table_rows_emitted": 517,
+  "section_table_regions_replaced_by_rows": 2,
+  "coverage_check": "Every emitted string was partitioned without character loss; table rows replace their linearized table regions.",
+  "requires_context_resolution": true,
+  "all_section_ranges_accounted_for": 1059,
+  "citation_ids_resolve": true,
+  "json_pointers_resolve": true,
+  "table_rows_accounted_for": 517,
+  "test_input": "Delivered reference JSON with only 50 source-derived row IDs added; this is a chunker test, not a fresh three-PDF extraction run."
+}
