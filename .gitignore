@@ -34,8 +34,26 @@ build/
 Thumbs.db
 
 # Data
-data/raw/*.pdf
-data/processed/*.json
+# Source PDFs
+/data/raw/**/*.pdf
+
+# Generated JSON, chunks and embeddings
+/data/processed/**/*.json
+/data/processed/**/*.jsonl
+/data/processed/**/*.npy
+
+# Downloaded tokenizer
+/data/tokenizer/
+
+# Intermediate extraction files
+/data/interim/**/*.txt
+/data/interim/**/*.json
+
+# Generated BM25 indexes, reports and current-build pointer
+/data/bm25_index/
+
+# Local Qdrant database
+qdrant_storage/
 
 # Logs
 *.log
@@ -49,3 +67,10 @@ htmlcov/
 # DVC
 .dvc/cache/
 *.dvc
+
+
+
+#don't know
+sss/
+ingestion/pipeline_stubs_backup/
+data/processed/*_test/
