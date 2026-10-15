@@ -4,4 +4,3 @@
 class ContextCompressor:
     """Compresses and filters retrieved documents for LLM input."""
 
-    pass

@@ -4,4 +4,3 @@
 class Reranker:
     """Reranks retrieval results using a cross-encoder model."""
 
-    pass

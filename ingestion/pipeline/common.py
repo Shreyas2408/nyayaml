@@ -26,6 +26,14 @@ def join_lines(lines):
 def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
+def read_jsonl(path):
+    rows=[]
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                rows.append(json.loads(line))
+    return rows
+
 
 def write_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
