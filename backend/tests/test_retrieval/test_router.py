@@ -2,10 +2,9 @@
 
 import unittest
 
-from fastapi.testclient import TestClient
-
 from backend.app.main import app
 from backend.app.retrieval import router as retrieval_router
+from fastapi.testclient import TestClient
 
 
 class FakeRetriever:

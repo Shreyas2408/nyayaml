@@ -1,8 +1,11 @@
 # nyayaMl api- hybrid retriever demo(no llm)
 
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
+
 from .retrieval.router import close_retriever, router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

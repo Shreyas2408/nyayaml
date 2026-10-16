@@ -5,10 +5,9 @@ from pathlib import Path
 from threading import Lock
 
 import numpy as np
+from ingestion.pipeline.common import file_hash, require
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, FieldCondition, Filter, MatchValue
-
-from ingestion.pipeline.common import file_hash, require
 
 from .artifacts import (
     ALIAS,

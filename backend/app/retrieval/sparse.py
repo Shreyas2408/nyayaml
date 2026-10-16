@@ -13,6 +13,7 @@ from .artifacts import (
     search_request,
 )
 
+
 class SparseRetriever:
 
     def __init__(self, *, artifacts=None, processed_dir=PROCESSED_DIR, index_dir=BM25_DIR):

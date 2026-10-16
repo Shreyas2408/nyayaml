@@ -8,7 +8,7 @@ from pathlib import Path
 
 from ingestion.pipeline.common import require
 
-from .artifacts import CorpusArtifacts, BM25_DIR, PROCESSED_DIR, search_request
+from .artifacts import BM25_DIR, PROCESSED_DIR, CorpusArtifacts, search_request
 from .dense import DenseRetriever
 from .fusion import RRF_K, reciprocal_rank_fusion
 from .sparse import SparseRetriever

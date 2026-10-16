@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import threading
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
@@ -22,7 +22,7 @@ _retriever: HybridRetriever | None=None
 
 class SearchRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=2000)
-    act: Optional[Literal["BNS", "BNSS", "BSA"]] = None
+    act: Literal["BNS", "BNSS", "BSA"] | None = None
     top_k: int = Field(10, ge=1, le=50)
 
 def get_retriever() -> HybridRetriever:
@@ -43,7 +43,10 @@ def close_retriever() -> None:
             _retriever = None
 
 @router.post("/search")
-def search(body: SearchRequest, retriever: HybridRetriever = Depends(get_retriever)):
+def search(
+    body: SearchRequest,
+    retriever: HybridRetriever = Depends(get_retriever),  # noqa: B008
+):
     try:
         return retriever.search(query=body.query, top_k=body.top_k, act=body.act)
     except ResponseHandlingException as exc:

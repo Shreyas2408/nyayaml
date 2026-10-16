@@ -9,7 +9,6 @@ from unittest.mock import patch
 
 from backend.app.retrieval.fusion import reciprocal_rank_fusion
 from backend.app.retrieval.hybrid import (
-    CANDIDATE_DEPTH,
     RESULT_FIELDS,
     HybridRetriever,
 )
