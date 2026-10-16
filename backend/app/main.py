@@ -1,3 +1,24 @@
+# nyayaMl api- hybrid retriever demo(no llm)
+
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from .retrieval.router import close_retriever, router
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    close_retriever()
+
+app= FastAPI(title="NyayaML", version="3.1.0", lifespan=lifespan)
+app.include_router(router, prefix="/api/v1/retrieval", tags=["retrieval"])
+
+@app.get("/api/v1/health")
+def health():
+    return {"status": "ok"}
+
+
+
+
 # """NyayaML v3.1 — FastAPI Application Entry Point."""
 
 # from collections.abc import AsyncGenerator
