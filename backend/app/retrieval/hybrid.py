@@ -1,15 +1,20 @@
+"""Hybrid retrieval: dense (BGE+Qdrant) + sparse(bm25), each fetching max(top_k, Candidate_depth)
+candidates, fused with reciprocal rank fusion(k=60), cut to top_k"""
+
+
 import argparse
 import json
 from pathlib import Path
 
 from ingestion.pipeline.common import require
 
-from .artifacts import BM25_DIR, PROCESSED_DIR, search_request
+from .artifacts import CorpusArtifacts, BM25_DIR, PROCESSED_DIR, search_request
 from .dense import DenseRetriever
 from .fusion import RRF_K, reciprocal_rank_fusion
 from .sparse import SparseRetriever
 
 HYBRID_VERSION= "hybrid-rrf-1"
+CANDIDATE_DEPTH = 20
 
 RESULT_FIELDS= (
     "citation_id",
@@ -42,22 +47,29 @@ class HybridRetriever:
         device="cpu",
         allow_download=False,
     ):
-        return cls(
-            DenseRetriever(
-                processed_dir=processed_dir,
-                url=url,
-                device=device,
-                allow_download=allow_download,
-            ),
-            SparseRetriever(processed_dir=processed_dir, index_dir=index_dir),
+        artifacts = CorpusArtifacts(processed_dir)
+        dense= DenseRetriever(
+            processed_dir=processed_dir,
+            url=url,
+            device=device,
+            allow_download=allow_download,
+            artifacts=artifacts,
         )
+        sparse = SparseRetriever(
+            processed_dir=processed_dir,
+            index_dir=index_dir,
+            artifacts=artifacts,      
+        )
+        return cls(dense, sparse)
     
     def search(self, query, top_k=20, *, act=None):
         query, act = search_request(query, top_k, act)
         if not query:
             return self._response(query, act, top_k, [], [], [])
-        dense_hits = self.dense.search(query, top_k, act=act)
-        sparse_hits = self.sparse.search(query, top_k, act=act)
+        # Always fetch more candidates, then cut after fusion
+        candidate_k = max(top_k, CANDIDATE_DEPTH)
+        dense_hits = self.dense.search(query, candidate_k, act=act)
+        sparse_hits = self.sparse.search(query, candidate_k, act=act)
         fused = reciprocal_rank_fusion([dense_hits, sparse_hits], top_k)
         return self._response(query, act, top_k, fused, dense_hits, sparse_hits)
 
@@ -79,12 +91,36 @@ class HybridRetriever:
         self.dense.close()
 
     def _response(self, query, act, top_k, fused, dense_hits, sparse_hits):
+        def _ranks(hits):
+            out={}
+            for i, hit in enumerate(hits,start=1):
+                cid=hit["chunk_id"]
+                if cid not in out:
+                    out[cid]=i
+            return out
+        
+        dense_rank= _ranks(dense_hits)
+        sparse_rank = _ranks(sparse_hits)
+
         results = []
         for rank, entry in enumerate(fused, start=1):
             payload = entry["payload"]
-            result = {"rank": rank, "rrf_score": entry["rrf_score"], "sources": entry["sources"]}
+            cid = entry["chunk_id"]
+
+            result = {
+                "rank": rank,
+                "chunk_id": cid,
+                "rrf_score": entry["rrf_score"],
+                "sources": entry["sources"],
+                "ranks": {
+                    "dense": dense_rank.get(cid),
+                    "sparse": sparse_rank.get(cid),
+                },
+            }
+
             for field in RESULT_FIELDS:
                 result[field] = payload[field]
+
             results.append(result)
         return {
             "status": "ok",
@@ -92,6 +128,7 @@ class HybridRetriever:
             "query": query,
             "act": act,
             "top_k": top_k,
+            "candidate_depth": max(top_k, CANDIDATE_DEPTH),
             "chunks_sha256": self.dense.artifacts.chunks_sha256,
             "counts": {
                 "dense": len(dense_hits),
