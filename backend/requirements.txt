@@ -33,7 +33,7 @@
 # qdrant-client==1.12.1
 
 # # ── Embeddings & Retrieval (future phases) ─────────────
-# sentence-transformers==3.3.1
+sentence-transformers==3.3.1
 # rank-bm25==0.2.2
 
 # # ── Prompt Management ──────────────────────────────────
@@ -67,6 +67,6 @@ python-multipart==0.0.20
 slowapi==0.1.9
 prometheus-client==0.21.1
 qdrant-client==1.12.1
-pyyaml==6.0.2
+pyyaml==6.0.3
 tenacity==9.0.0
 

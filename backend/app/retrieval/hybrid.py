@@ -15,6 +15,7 @@ from .sparse import SparseRetriever
 
 HYBRID_VERSION= "hybrid-rrf-1"
 CANDIDATE_DEPTH = 20
+FUSION_CUT = 40
 
 RESULT_FIELDS= (
     "citation_id",
@@ -62,16 +63,34 @@ class HybridRetriever:
         )
         return cls(dense, sparse)
     
-    def search(self, query, top_k=20, *, act=None):
+    def search(self, query, top_k=20, *, act=None, fusion_cut=None):
         query, act = search_request(query, top_k, act)
         if not query:
-            return self._response(query, act, top_k, [], [], [])
-        # Always fetch more candidates, then cut after fusion
+            return self._response(
+                query,
+                act,
+                top_k,
+                [],
+                [],
+                [],
+                fusion_cut=top_k if fusion_cut is None else fusion_cut,
+                candidate_depth=max(top_k, CANDIDATE_DEPTH),
+            )
+        cut = top_k if fusion_cut is None else fusion_cut
         candidate_k = max(top_k, CANDIDATE_DEPTH)
         dense_hits = self.dense.search(query, candidate_k, act=act)
         sparse_hits = self.sparse.search(query, candidate_k, act=act)
-        fused = reciprocal_rank_fusion([dense_hits, sparse_hits], top_k)
-        return self._response(query, act, top_k, fused, dense_hits, sparse_hits)
+        fused = reciprocal_rank_fusion([dense_hits, sparse_hits], cut)
+        return self._response(
+            query,
+            act,
+            top_k,
+            fused,
+            dense_hits,
+            sparse_hits,
+            fusion_cut=cut,
+            candidate_depth=candidate_k,
+        )
 
     def check(self):
         """Run both retrievers' integrity checks and confirm one shared corpus."""
@@ -90,7 +109,7 @@ class HybridRetriever:
     def close(self):
         self.dense.close()
 
-    def _response(self, query, act, top_k, fused, dense_hits, sparse_hits):
+    def _response(self, query, act, top_k, fused, dense_hits, sparse_hits, *, fusion_cut=None, candidate_depth=None):
         def _ranks(hits):
             out={}
             for i, hit in enumerate(hits,start=1):
@@ -128,7 +147,12 @@ class HybridRetriever:
             "query": query,
             "act": act,
             "top_k": top_k,
-            "candidate_depth": max(top_k, CANDIDATE_DEPTH),
+            "candidate_depth": (
+                max(top_k, CANDIDATE_DEPTH)
+                if candidate_depth is None
+                else candidate_depth
+            ),
+            "fusion_cut": fusion_cut,
             "chunks_sha256": self.dense.artifacts.chunks_sha256,
             "counts": {
                 "dense": len(dense_hits),
