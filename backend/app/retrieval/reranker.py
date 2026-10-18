@@ -18,6 +18,7 @@ class Reranker:
     def __init__(self, encoder: Any | None = None, *, allow_download: bool = False):
         self._encoder = encoder
         self.allow_download = allow_download
+        self.hybrid = None
 
     def _load_model(self):
         if self._encoder is None:
@@ -30,6 +31,10 @@ class Reranker:
                 local_files_only=not self.allow_download,
             )
         return self._encoder
+
+    def get_encoder(self):
+        """Return the shared MiniLM encoder, loading it only when needed."""
+        return self._load_model()
 
     def rerank(
         self,
@@ -73,6 +78,54 @@ class Reranker:
             hit["rank"] = i
         return results
 
+    def search(self, query, top_k=3, *, act=None, fusion_cut=FUSION_CUT):
+        """Same JSON as: python -m backend.app.retrieval.reranker --query ...
+
+        Composes exactly what main() composes. The hybrid is instance-owned:
+        attached lazily on first call, closed once by close(). Never per call.
+        """
+        if self.hybrid is None:
+            from .artifacts import BM25_DIR, PROCESSED_DIR
+            from .hybrid import HybridRetriever
+
+            self.hybrid = HybridRetriever.standard(
+                processed_dir=PROCESSED_DIR,   # main()'s exact construction,
+                index_dir=BM25_DIR,            # minus the CLI override flags
+                url=None,
+                device="cpu",
+                allow_download=self.allow_download,
+            )
+
+        hybrid_out = self.hybrid.search(
+            query, top_k=top_k, act=act, fusion_cut=fusion_cut,
+        )
+        results = self.rerank(
+            query, hybrid_out["results"], top_k=top_k, fusion_cut=fusion_cut,
+        )
+        counts = dict(hybrid_out.get("counts") or {})
+        counts["reranked"] = len(results)
+        return {
+            "status": "ok",
+            "retriever": "reranker-minilm-1",
+            "query": hybrid_out.get("query", query),
+            "act": hybrid_out.get("act", act),
+            "top_k": top_k,
+            "model": MODEL_NAME,
+            "revision": MODEL_REVISION,
+            "device": "cpu",
+            "candidate_depth": hybrid_out.get("candidate_depth"),
+            "fusion_cut": fusion_cut,
+            "chunks_sha256": hybrid_out.get("chunks_sha256"),
+            "counts": counts,
+            "results": results,
+        }
+
+    def close(self):
+        """Tear down owned resources. Idempotent."""
+        hybrid, self.hybrid = self.hybrid, None
+        if hybrid is not None:
+            hybrid.close()
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -109,53 +162,20 @@ def main():
     from .artifacts import BM25_DIR, PROCESSED_DIR
     from .hybrid import HybridRetriever
 
-    retriever = HybridRetriever.standard(
-        processed_dir=args.processed_dir or PROCESSED_DIR,
-        index_dir=args.index_dir or BM25_DIR,
+    reranker.hybrid = HybridRetriever.standard(          # CLI overrides injected;
+        processed_dir=args.processed_dir or PROCESSED_DIR,  # search() won't build
+        index_dir=args.index_dir or BM25_DIR,               # its own when set
         url=args.url,
         device="cpu",
         allow_download=args.allow_download,
     )
     try:
-        hybrid_out = retriever.search(
-            args.query,
-            top_k=args.top_k,
-            act=args.act,
-            fusion_cut=args.fusion_cut,
+        result = reranker.search(
+            args.query, top_k=args.top_k, act=args.act, fusion_cut=args.fusion_cut,
         )
-        results = reranker.rerank(
-            args.query,
-            hybrid_out["results"],
-            top_k=args.top_k,
-            fusion_cut=args.fusion_cut,
-        )
-        print(
-            json.dumps(
-                {
-                    "status": "ok",
-                    "retriever": "reranker-minilm-1",
-                    "query": hybrid_out.get("query", args.query),
-                    "act": hybrid_out.get("act", args.act),
-                    "top_k": args.top_k,
-                    "model": MODEL_NAME,
-                    "revision": MODEL_REVISION,
-                    "device": "cpu",
-                    "candidate_depth": hybrid_out.get("candidate_depth"),
-                    "fusion_cut": args.fusion_cut,
-                    "chunks_sha256": hybrid_out.get("chunks_sha256"),
-                    "counts": {
-                        **hybrid_out.get("counts", {}),
-                        "reranked": len(results),
-                    },
-                    "results": results,
-                },
-                indent=2,
-                ensure_ascii=False,
-                allow_nan=False,
-            )
-        )
+        print(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False))
     finally:
-        retriever.close()
+        reranker.close()
 
 
 if __name__ == "__main__":

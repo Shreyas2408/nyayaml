@@ -161,6 +161,53 @@ class RerankerUnitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             reranker.rerank("query", [_fused_hit("a", "a")], top_k=-1)
 
+class SearchCompositionTests(unittest.TestCase):
+    """Reranker.search must compose hybrid -> rerank and return CLI-shaped JSON.
+    Regression pin for the WP5a<->WP5b seam."""
+
+    class _FakeHybrid:
+        def __init__(self, results):
+            self._results = results
+            self.closed = False
+
+        def search(self, query, top_k=3, act=None, fusion_cut=40):
+            return {
+                "query": query, "act": act,
+                "counts": {"dense": 1, "sparse": 1, "fused": 1},
+                "candidate_depth": 20, "chunks_sha256": "fake",
+                "results": list(self._results),
+            }
+
+        def close(self):
+            self.closed = True
+
+    class _FakeEncoder:
+        def predict(self, pairs):
+            return [1.0] * len(pairs)
+
+    def test_search_composes_hybrid_then_rerank(self):
+        from backend.app.retrieval.reranker import Reranker
+
+        hit = {"chunk_id": "c1", "text": "Murder is punishable with death.",
+               "embedding_text": "BNS | Murder. Murder is punishable with death."}
+        reranker = Reranker(encoder=self._FakeEncoder())
+        reranker.hybrid = self._FakeHybrid([hit])
+        out = reranker.search("murder punishment", top_k=1, act="BNS")
+        self.assertEqual(out["status"], "ok")
+        self.assertEqual(out["counts"]["reranked"], 1)
+        self.assertTrue(all("rerank_score" in r for r in out["results"]))
+        self.assertEqual(out["results"][0]["rank"], 1)
+
+    def test_close_closes_owned_hybrid_once(self):
+        from backend.app.retrieval.reranker import Reranker
+
+        reranker = Reranker()
+        fake = self._FakeHybrid([])
+        reranker.hybrid = fake
+        reranker.close()
+        self.assertTrue(fake.closed)
+        self.assertIsNone(reranker.hybrid)
+        reranker.close()  # idempotent — must not raise
 
 if __name__ == "__main__":
     unittest.main()
