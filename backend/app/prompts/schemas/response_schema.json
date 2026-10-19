@@ -1,22 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "NyayaML Response Schema",
+  "description": "Contract for LLM answers parsed by backend/app/llm/structured.py. Keep in sync with the LLMResponse model.",
   "type": "object",
-  "required": ["answer", "citations", "confidence"],
+  "required": [
+    "answer",
+    "citations",
+    "confidence"
+  ],
+  "additionalProperties": true,
   "properties": {
     "answer": {
       "type": "string",
+      "minLength": 1,
       "description": "The main response text"
     },
     "citations": {
       "type": "array",
+      "description": "Passages the answer relies on; citation_id is verified against the corpus.",
       "items": {
         "type": "object",
-        "required": ["act", "section"],
+        "required": [
+          "citation_id"
+        ],
+        "additionalProperties": true,
         "properties": {
+          "citation_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Exact corpus citation, for example BNS-2023-ff92dcc72778-S103"
+          },
           "act": {
             "type": "string",
-            "enum": ["BNS", "BNSS", "BSA"]
+            "enum": [
+              "BNS",
+              "BNSS",
+              "BSA"
+            ]
           },
           "section": {
             "type": "string"
@@ -40,14 +60,28 @@
     },
     "query_type": {
       "type": "string",
-      "enum": ["direct_lookup", "scenario_analysis", "comparative", "procedural"]
+      "enum": [
+        "direct_lookup",
+        "scenario",
+        "cross_act",
+        "procedural",
+        "out_of_scope",
+        "definition",
+        "punishment"
+      ]
     },
     "verification": {
       "type": "object",
       "properties": {
-        "citations_verified": { "type": "boolean" },
-        "hallucination_check": { "type": "boolean" },
-        "cross_act_validated": { "type": "boolean" }
+        "citations_verified": {
+          "type": "boolean"
+        },
+        "hallucination_check": {
+          "type": "boolean"
+        },
+        "cross_act_validated": {
+          "type": "boolean"
+        }
       }
     }
   }
