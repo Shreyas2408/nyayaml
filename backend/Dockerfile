@@ -1,4 +1,8 @@
-# ── Stage 1: Build ──────────────────────────────────────
+# syntax=docker/dockerfile:1
+# Build context is the REPO ROOT (set in docker-compose.yml).
+# Every path below starts from the repo root.
+
+# ── Stage 1: install packages ──
 FROM python:3.10-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -7,11 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
+COPY backend/requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --prefix=/install -r requirements.txt
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
-
-# ── Stage 2: Runtime ────────────────────────────────────
+# ── Stage 2: runtime ──
 FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,16 +23,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
 RUN groupadd -r nyaya && useradd -r -g nyaya -m -s /bin/bash nyaya
 
-# Copy installed packages from builder
 COPY --from=builder /install /usr/local
 
 WORKDIR /home/nyaya/app
 
-# Copy application code
-COPY --chown=nyaya:nyaya . .
+# FastAPI app: backend/app -> /home/nyaya/app/app
+COPY --chown=nyaya:nyaya backend/app ./app
+
+# Only the pipeline package the backend imports: /home/nyaya/app/ingestion/pipeline
+COPY --chown=nyaya:nyaya ingestion/pipeline ./ingestion/pipeline
+
+# Model cache folder, owned by the nyaya user (needed for the named volume)
+RUN mkdir -p /home/nyaya/.cache/huggingface \
+    && chown -R nyaya:nyaya /home/nyaya/.cache
 
 USER nyaya
 

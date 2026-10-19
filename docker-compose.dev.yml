@@ -1,9 +1,10 @@
-# Development overrides — use with: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+# Development overrides. Use with:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     volumes:
       - ./backend/app:/home/nyaya/app/app:ro
     environment:
@@ -12,7 +13,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /home/nyaya/app/app
     ports:
       - "8000:8000"
-      - "5678:5678"  # debugpy port
+      - "5678:5678"
 
   postgres:
     ports:

@@ -1,0 +1,16 @@
+.git
+.venv
+**/__pycache__
+**/*.pyc
+.env
+.env.*
+data
+**/qdrant_storage
+frontend
+monitoring
+docs
+nginx
+ingestion/pipeline_stubs_backup
+ingestion/tests_astra
+**/node_modules
+*.log

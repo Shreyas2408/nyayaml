@@ -14,12 +14,18 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_BASE_URL: http://ollama:11434
+    volumes:
+      - ./data:/home/nyaya/data:ro
+      - hf_cache:/home/nyaya/.cache/huggingface
     depends_on:
       postgres:
         condition: service_healthy
@@ -131,6 +137,7 @@ volumes:
   qdrant_storage:
   ollama_data:
   grafana_data:
+  hf_cache:
 
 networks:
   nyayaml-net:
