@@ -1,0 +1,83 @@
+{
+  "version": "v2",
+  "seed": 3402,
+  "corpus_sha256": "970fdfe0c7851137114ed42227310e290d5d085350d522f8ce0f05e0c81db0b7",
+  "chunks_sha256": "e6565a67c49412a2c0c31fe655bfeee41634c8ea9f5968d17d0a12fad7b6d514",
+  "citations_sha256": "df81cddac9339d82f246931738c9fc2d61f4b688f28bdb527c4d63044a37826c",
+  "total_questions": 32,
+  "categories": {
+    "procedural": 5,
+    "direct_lookup": 20,
+    "cross_act": 4,
+    "scenario": 3
+  },
+  "acts": {
+    "BNSS": 11,
+    "BNS": 7,
+    "BSA": 7,
+    "null": 7
+  },
+  "generated_at": "2026-10-31T17:51:55Z",
+  "corpus_path": "reference/Bns_Bnss_Bsa_2023_final.json",
+  "chunks_path": "data/processed/chunks.jsonl",
+  "citations_path": "data/processed/citations.json",
+  "scope": "P34-02 initial pass: 32 unique questions over the ingested BNS/BNSS/BSA 2023 snapshot only. Not current law or case law. The 500-question scale pass belongs to P34-02b.",
+  "counting": "categories and acts count rows. acts.null counts multi-act rows once, without duplicating them under individual acts.",
+  "review_policy": "gold_retrieval records observed retrieval plus corpus inspection; corpus_section records title lookups. needs_legal_review=false means no fact-specific legal application was labeled. All generated_candidate rows require legal review. Their gold_citation_ids are non-exhaustive research candidates, not accepted legal answers.",
+  "metrics_note": "P34-03 citation-overlap metrics are proxies for matching research targets, not measures of legal correctness.",
+  "generator": {
+    "identity": "nyayaml-direct-lookup-v1",
+    "entry_point": "backend.app.evaluation.dataset.regenerate",
+    "source_path": "backend/app/evaluation/dataset.py",
+    "act_order": [
+      "BNS",
+      "BNSS",
+      "BSA"
+    ],
+    "per_act": 6,
+    "stride": 37,
+    "excluded_citation_ids": [
+      "BNSS-2023-8047fe1de609-S359",
+      "BNS-2023-ff92dcc72778-S103",
+      "BSA-2023-993882ad0ae7-S63"
+    ],
+    "algorithm": "Select kind=section entries, excluding the three retrieval seeds; sort lexically by citation_id. Within each act, select indices (seed + i * stride) % pool_size for i=0..per_act-1. Pool sizes are BNS=357, BNSS=530, BSA=169; stride is coprime to each. IDs are p34-02-direct-{citation_id}; queries use whitespace-normalized corpus section titles.",
+    "output": "18 corpus_section rows in act_order. Three hand retrieval seeds and eleven manual generated_candidate rows are retained verbatim in questions_v2.json; this function never generates or upgrades their provenance."
+  },
+  "retrieval_evidence": {
+    "method": "Offline backend.app.retrieval.sparse.SparseRetriever.search(query, top_k=5, act=act); SparseRetriever.check passed the existing index and chunk checks. No Ollama or live Qdrant call.",
+    "index_build": "8bc2357e5483a88f",
+    "chunks_sha256": "e6565a67c49412a2c0c31fe655bfeee41634c8ea9f5968d17d0a12fad7b6d514",
+    "observed_at": "2026-10-31T17:51:55Z",
+    "seeds": [
+      {
+        "question_id": "p34-02-seed-compounding",
+        "query": "compounding of offences",
+        "act": "BNSS",
+        "citation_id": "BNSS-2023-8047fe1de609-S359",
+        "rank": 1,
+        "chunk_id": "chunk-7595ace39970a222b9ddcce4",
+        "score": 9.990645298272973,
+        "additional_evidence": "User-confirmed P34-01 live smoke; local smoke.json rank 1 chunk-78cd90bb784ba9e8be4e669c points to the same section. smoke.json is not a test dependency."
+      },
+      {
+        "question_id": "p34-02-seed-murder-punishment",
+        "query": "punishment for murder",
+        "act": "BNS",
+        "citation_id": "BNS-2023-ff92dcc72778-S103",
+        "rank": 2,
+        "chunk_id": "chunk-32304420c45470adc404595f",
+        "score": 10.248861904998984
+      },
+      {
+        "question_id": "p34-02-seed-electronic-records",
+        "query": "admissibility of electronic records",
+        "act": "BSA",
+        "citation_id": "BSA-2023-993882ad0ae7-S63",
+        "rank": 1,
+        "chunk_id": "chunk-ede836f5d5ea20a196d5fc8a",
+        "score": 17.021772546307595
+      }
+    ]
+  }
+}

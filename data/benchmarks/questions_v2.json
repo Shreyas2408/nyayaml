@@ -1,0 +1,431 @@
+{
+  "version": "v2",
+  "questions": [
+    {
+      "id": "p34-02-seed-compounding",
+      "query": "compounding of offences",
+      "act": "BNSS",
+      "category": "procedural",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S359"
+      ],
+      "provenance": "gold_retrieval",
+      "json_pointer": "/documents/1/sections/358",
+      "needs_legal_review": false,
+      "notes": "P34-01 live smoke.json rank 1; independently confirmed by offline BM25 rank 1. Evidence and chunk IDs are recorded in MANIFEST.json. Retrieval target only."
+    },
+    {
+      "id": "p34-02-seed-murder-punishment",
+      "query": "punishment for murder",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S103"
+      ],
+      "provenance": "gold_retrieval",
+      "json_pointer": "/documents/0/sections/102",
+      "needs_legal_review": false,
+      "notes": "Offline BM25 retrieved this general-punishment section at rank 2 (the life-convict section ranked 1). Manually checked the section title and text; no sentencing advice. See MANIFEST.json."
+    },
+    {
+      "id": "p34-02-seed-electronic-records",
+      "query": "admissibility of electronic records",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "gold_retrieval",
+      "json_pointer": "/documents/2/sections/62",
+      "needs_legal_review": false,
+      "notes": "Offline BM25 rank 1; manually checked the section title and text. This is a retrieval target, not a finding that any particular record is admissible. See MANIFEST.json."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S270",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Public nuisance'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S270"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/269",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S303",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Theft'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S303"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/302",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S337",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Forgery of record of Court or of public register, etc'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S337"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/336",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S48",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Abetment outside India for offence in India'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S48"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/47",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S81",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Cohabitation caused by man deceitfully inducing belief of lawful marriage'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S81"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/80",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNS-2023-ff92dcc72778-S115",
+      "query": "Which provision in the ingested BNS 2023 snapshot covers 'Voluntarily causing hurt'?",
+      "act": "BNS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S115"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/0/sections/114",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S3",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Construction of references'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S3"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/2",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S332",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Evidence of formal character on affidavit'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S332"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/331",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S367",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Procedure in case of accused being person of unsound mind'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S367"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/366",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S40",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Arrest by private person and procedure on such arrest'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S40"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/39",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S433",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Procedure where Judges of Court of appeal are equally divided'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S433"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/432",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BNSS-2023-8047fe1de609-S467",
+      "query": "Which provision in the ingested BNSS 2023 snapshot covers 'Sentence on offender already sentenced for another offence'?",
+      "act": "BNSS",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S467"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/1/sections/466",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S119",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Court may presume existence of certain facts'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S119"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/118",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S152",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Question not to be asked without reasonable grounds'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S152"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/151",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S32",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Relevancy of statements as to any law contained in law books including electronic or digital form'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S32"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/31",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S67",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Proof of execution of document required by law to be attested'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S67"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/66",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S10",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Facts tending to enable Court to determine amount are relevant in suits for damages'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S10"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/9",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-direct-BSA-2023-993882ad0ae7-S133",
+      "query": "Which provision in the ingested BSA 2023 snapshot covers 'Privilege not waived by volunteering evidence'?",
+      "act": "BSA",
+      "category": "direct_lookup",
+      "gold_citation_ids": [
+        "BSA-2023-993882ad0ae7-S133"
+      ],
+      "provenance": "corpus_section",
+      "json_pointer": "/documents/2/sections/132",
+      "needs_legal_review": false,
+      "notes": "Title lookup from the pinned corpus; no legal application assessed."
+    },
+    {
+      "id": "p34-02-procedural-electronic-information",
+      "query": "In the ingested BNSS 2023 snapshot, which provision should be researched for recording information about a cognizable offence supplied by electronic communication?",
+      "act": "BNSS",
+      "category": "procedural",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S173"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. FIR-family lookup; no assessment of a particular complaint.",
+      "json_pointer": "/documents/1/sections/172"
+    },
+    {
+      "id": "p34-02-procedural-non-cognizable-investigation",
+      "query": "In the ingested BNSS 2023 snapshot, which provision should be researched for recording non-cognizable information and obtaining a Magistrate order for investigation?",
+      "act": "BNSS",
+      "category": "procedural",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S174"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Does not classify any particular alleged offence as non-cognizable.",
+      "json_pointer": "/documents/1/sections/173"
+    },
+    {
+      "id": "p34-02-procedural-magistrate-cognizance",
+      "query": "In the ingested BNSS 2023 snapshot, which provision should be researched for a Magistrate taking cognizance on a complaint or police report?",
+      "act": "BNSS",
+      "category": "procedural",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S210"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Conditions and exceptions must be checked in the corpus.",
+      "json_pointer": "/documents/1/sections/209"
+    },
+    {
+      "id": "p34-02-procedural-completion-report",
+      "query": "In the ingested BNSS 2023 snapshot, which provision should be researched for the police report on completion of an investigation, including electronic-device custody information?",
+      "act": "BNSS",
+      "category": "procedural",
+      "gold_citation_ids": [
+        "BNSS-2023-8047fe1de609-S193"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. No claim about a report complying with the provision.",
+      "json_pointer": "/documents/1/sections/192"
+    },
+    {
+      "id": "p34-02-cross_act-theft-report-records",
+      "query": "Across the ingested BNS, BNSS and BSA 2023 snapshot, which provisions should be researched together for theft, information in cognizable cases, and admissibility of electronic records?",
+      "act": null,
+      "category": "cross_act",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S303",
+        "BNSS-2023-8047fe1de609-S173",
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Selected offence, procedure and evidence research targets; no case outcome asserted."
+    },
+    {
+      "id": "p34-02-cross_act-cheating-investigation-records",
+      "query": "Across the ingested BNS, BNSS and BSA 2023 snapshot, which provisions should be researched together for cheating, a police report completing an investigation, and electronic transaction evidence?",
+      "act": null,
+      "category": "cross_act",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S318",
+        "BNSS-2023-8047fe1de609-S193",
+        "BSA-2023-993882ad0ae7-S61",
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Electronic-record provisions do not establish that a transaction proves cheating."
+    },
+    {
+      "id": "p34-02-cross_act-forgery-cognizance-records",
+      "query": "Across the ingested BNS, BNSS and BSA 2023 snapshot, which provisions should be researched together for forgery, Magistrate cognizance, and admissibility of an electronic record?",
+      "act": null,
+      "category": "cross_act",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S336",
+        "BNSS-2023-8047fe1de609-S210",
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. No conclusion about whether a document is forged or admissible."
+    },
+    {
+      "id": "p34-02-cross_act-murder-confession",
+      "query": "Across the ingested BNS, BNSS and BSA 2023 snapshot, which provisions should be researched together for murder punishment, recording a confession before a Magistrate, and limits on using coerced or police confessions?",
+      "act": null,
+      "category": "cross_act",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S103",
+        "BNSS-2023-8047fe1de609-S183",
+        "BSA-2023-993882ad0ae7-S22",
+        "BSA-2023-993882ad0ae7-S23"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Research list only; no judicial holding, guilt determination or sentencing recommendation."
+    },
+    {
+      "id": "p34-02-scenario-phone-shop-footage",
+      "query": "A shopkeeper reports that someone took a phone without permission and offers exported CCTV footage. Using only the ingested 2023 snapshot, which provisions should be researched for possible theft, reporting a cognizable allegation, and electronic-record evidence?",
+      "act": null,
+      "category": "scenario",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S303",
+        "BNSS-2023-8047fe1de609-S173",
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Candidate provisions only; intent, offence classification and admissibility remain open."
+    },
+    {
+      "id": "p34-02-scenario-threatening-messages",
+      "query": "A person receives messages threatening damage to property and is told the complaint may be non-cognizable. Using only the ingested 2023 snapshot, which provisions should be researched for possible criminal intimidation, non-cognizable investigation procedure, and the messages as evidence?",
+      "act": null,
+      "category": "scenario",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S351",
+        "BNSS-2023-8047fe1de609-S174",
+        "BSA-2023-993882ad0ae7-S63"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Candidate provisions only; the reported classification is a hypothetical fact to check, not a legal conclusion."
+    },
+    {
+      "id": "p34-02-scenario-pressure-to-confess",
+      "query": "A seller accused of obtaining payment through a false promise says police pressured them to confess before a proposed Magistrate appearance. Using only the ingested 2023 snapshot, which provisions should be researched for possible cheating, confession recording, and evidentiary limits?",
+      "act": null,
+      "category": "scenario",
+      "gold_citation_ids": [
+        "BNS-2023-ff92dcc72778-S318",
+        "BNSS-2023-8047fe1de609-S183",
+        "BSA-2023-993882ad0ae7-S22",
+        "BSA-2023-993882ad0ae7-S23"
+      ],
+      "provenance": "generated_candidate",
+      "needs_legal_review": true,
+      "notes": "Manually drafted research candidate; targets are non-exhaustive and require legal review. Candidate provisions only; neither cheating nor coercion nor admissibility is determined."
+    }
+  ]
+}
