@@ -1,16 +1,28 @@
-"""Auth utilities — password hashing, JWT token creation."""
+"""Compatibility helpers backed by the shared security implementation."""
+
+import jwt
+
+from app.core.security import (
+    AUDIENCE,
+    ISSUER,
+    create_token,
+    hash_password,
+    verify_password,
+)
+from app.core.security import decode_token as _decode_token
+from app.core.security import (
+    hash_token as token_digest,
+)
+
+__all__ = [
+    "AUDIENCE", "ISSUER", "create_token", "decode_token", "hash_password",
+    "token_digest", "verify_password",
+]
 
 
-def hash_password(password: str) -> str:
-    """Hash a plaintext password — stub."""
-    raise NotImplementedError
-
-
-def verify_password(plain: str, hashed: str) -> bool:
-    """Verify a password against its hash — stub."""
-    raise NotImplementedError
-
-
-def create_access_token(data: dict) -> str:
-    """Create a JWT access token — stub."""
-    raise NotImplementedError
+def decode_token(token: str, purpose: str) -> dict:
+    """Retain purpose validation for callers of the previous helper API."""
+    claims = _decode_token(token)
+    if claims["type"] != purpose:
+        raise jwt.InvalidTokenError("Wrong token purpose")
+    return claims
