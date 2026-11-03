@@ -11,6 +11,8 @@ from app.config import settings
 from app.core.redis import get_redis
 from app.db.models import User
 
+QUERY_RATE_LIMIT_PER_HOUR = 30
+
 # SET NX EX creates the first counter with its TTL in one operation. Lua also
 # makes increment/TTL handling indivisible at window rollover and across workers.
 QUOTA_SCRIPT = """
@@ -34,8 +36,14 @@ async def _consume(redis, key: str, limit: int, seconds: int) -> None:
         )
 
 
-async def check_rate_limit(ip_address: str, endpoint: str) -> None:
-    """Apply the configured hourly quota per peer IP and auth endpoint."""
+async def check_rate_limit(
+    identifier: str, endpoint: str, limit: int | None = None,
+) -> None:
+    """Apply an hourly quota per identifier; auth defaults remain unchanged."""
+    if limit is None:
+        limit = settings.rate_limit_per_hour
+    if limit < 1:
+        raise ValueError("Rate limit must be positive")
     # Request-scoped lifetime works with the existing main.py lifespan, which
     # does not initialize core.redis. Connections are closed even on failure.
     try:
@@ -44,7 +52,7 @@ async def check_rate_limit(ip_address: str, endpoint: str) -> None:
             socket_connect_timeout=2, socket_timeout=2,
         ) as client:
             await _consume(
-                client, f"rate_limit:{endpoint}:{ip_address}", settings.rate_limit_per_hour, 3600
+                client, f"rate_limit:{endpoint}:{identifier}", limit, 3600
             )
     except (RedisError, OSError):
         raise HTTPException(503, "Rate limiting unavailable") from None
@@ -59,7 +67,7 @@ async def query_limit(
     user: Annotated[User, Depends(current_user)],
     redis: Annotated[aioredis.Redis, Depends(get_redis)],
 ):
-    await consume(redis, "query:" + str(user.id), settings.rate_limit_per_hour, 3600)
+    await consume(redis, "query:" + str(user.id), QUERY_RATE_LIMIT_PER_HOUR, 3600)
     return user
 
 

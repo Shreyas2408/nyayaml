@@ -2,7 +2,7 @@
 
 The only deletion is --smoke removing its own synthetic row in a finally block.
 This module records supplied responses, disclaimers and corpus identifiers; it
-does not validate legal correctness. API wiring is deferred to P34-06.
+does not validate legal correctness. API callers supply an authenticated owner.
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ async def record_query_job(
     latency_ms: float | None = None,
     error: str | None = None,
     corpus_sha256: str | None = None,
+    user_id: UUID | None = None,
 ) -> UUID:
     """Commit one attempt in a fresh session; failed attempts need an error.
 
@@ -76,6 +77,7 @@ async def record_query_job(
         latency_ms=latency_ms,
         error=error,
         corpus_sha256=corpus_sha256,
+        user_id=user_id,
         **fields,
     )
     if session_factory is None:
@@ -102,18 +104,26 @@ async def get_query_job(job_id: UUID) -> QueryJob | None:
         return await session.get(QueryJob, job_id)
 
 
-async def list_recent(limit: int = 50) -> list[QueryJob]:
-    """Read newest records first, breaking timestamp ties by UUID."""
+async def list_recent(
+    limit: int = 50, *, user_id: UUID | None = None, session_factory=None,
+) -> list[QueryJob]:
+    """Read newest records first; API callers must supply their authenticated owner.
+
+    Unfiltered reads remain available to existing internal callers, never through
+    the public query API. UUID ordering breaks ties in creation timestamps.
+    """
     if limit < 1:
         raise ValueError("limit must be positive")
-    from app.core.database import async_session_maker
+    if session_factory is None:
+        from app.core.database import async_session_maker
 
-    async with async_session_maker() as session:
-        result = await session.scalars(
-            select(QueryJob)
-            .order_by(QueryJob.created_at.desc(), QueryJob.id.desc())
-            .limit(limit)
-        )
+        session_factory = async_session_maker
+    statement = select(QueryJob)
+    if user_id is not None:
+        statement = statement.where(QueryJob.user_id == user_id)
+    statement = statement.order_by(QueryJob.created_at.desc(), QueryJob.id.desc()).limit(limit)
+    async with session_factory() as session:
+        result = await session.scalars(statement)
         return list(result.all())
 
 

@@ -272,6 +272,7 @@ class RepositoryTests(unittest.IsolatedAsyncioTestCase):
                 "latency_ms",
                 "error",
                 "corpus_sha256",
+                "user_id",
             ],
         )
         self.assertIsNone(signature.parameters["session_factory"].default)
@@ -282,6 +283,7 @@ class RepositoryTests(unittest.IsolatedAsyncioTestCase):
             "latency_ms",
             "error",
             "corpus_sha256",
+            "user_id",
         ):
             self.assertEqual(
                 signature.parameters[name].kind, inspect.Parameter.KEYWORD_ONLY
