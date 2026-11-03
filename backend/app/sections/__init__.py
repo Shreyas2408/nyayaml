@@ -1,1 +1,1 @@
-"""Sections module — legal section browsing and search."""
+"""Read-only lookup of the 2023 statutory snapshot."""

@@ -1,1 +1,1 @@
-"""Analytics module — usage tracking and reporting."""
+"""Owner-scoped read-only usage analytics."""

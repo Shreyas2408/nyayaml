@@ -1,0 +1,7 @@
+# USERPROFILE is Windows-dev-specific; translate it to a WSL path when using WSL Compose.
+services:
+  backend:
+    volumes:
+      - ./backend/app:/home/nyaya/app/app:ro
+      - ${USERPROFILE}/.cache/huggingface/hub/models--cross-encoder--ms-marco-MiniLM-L6-v2:/home/nyaya/.cache/huggingface/hub/models--cross-encoder--ms-marco-MiniLM-L6-v2:ro
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "/home/nyaya/app/app"]

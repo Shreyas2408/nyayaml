@@ -1,5 +1,7 @@
 """Application configuration using pydantic-settings."""
 
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +29,7 @@ class Settings(BaseSettings):
 
     # ── Rate Limiting ──────────────────────────────────
     rate_limit_per_hour: int = 100
+    corpus_path: Path = Path(__file__).resolve().parents[2] / "data/processed/Bns_Bnss_Bsa_2023_final.json"
 
     # ── Logging & Environment ──────────────────────────
     log_level: str = "INFO"

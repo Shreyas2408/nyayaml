@@ -11,6 +11,8 @@ import argparse
 import asyncio
 import json
 import sys
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from uuid import UUID
 
@@ -26,6 +28,15 @@ from app.query.schemas import QueryRequest, QueryResponse
 
 _MODES = frozenset({"retrieval-only", "with-llm", "api"})
 _SMOKE_QUERY = "P34-04 smoke — not a legal query"
+
+
+@dataclass(frozen=True)
+class UsageRow:
+    """Only the audit measurements required by owner-scoped analytics."""
+
+    status: str
+    latency_ms: float | None
+    created_at: datetime
 
 
 async def record_query_job(
@@ -125,6 +136,24 @@ async def list_recent(
     async with session_factory() as session:
         result = await session.scalars(statement)
         return list(result.all())
+
+
+async def list_usage_for_analytics(
+    session_factory=None, *, user_id: UUID,
+) -> list[UsageRow]:
+    """Read measurements in a fresh session with a mandatory owner predicate."""
+    if not isinstance(user_id, UUID):
+        raise TypeError("An owner UUID is required")
+    if session_factory is None:
+        from app.core.database import async_session_maker
+
+        session_factory = async_session_maker
+    statement = select(
+        QueryJob.status, QueryJob.latency_ms, QueryJob.created_at,
+    ).where(QueryJob.user_id == user_id)
+    async with session_factory() as session:
+        result = await session.execute(statement)
+        return [UsageRow(row.status, row.latency_ms, row.created_at) for row in result.all()]
 
 
 async def _smoke() -> dict:

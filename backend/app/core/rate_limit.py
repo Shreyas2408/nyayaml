@@ -12,6 +12,8 @@ from app.core.redis import get_redis
 from app.db.models import User
 
 QUERY_RATE_LIMIT_PER_HOUR = 30
+SECTIONS_RATE_LIMIT_PER_HOUR = 120
+ANALYTICS_RATE_LIMIT_PER_HOUR = 120
 
 # SET NX EX creates the first counter with its TTL in one operation. Lua also
 # makes increment/TTL handling indivisible at window rollover and across workers.

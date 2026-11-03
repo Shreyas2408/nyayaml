@@ -259,7 +259,7 @@ class RepositoryTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(any("delete" in n or "update" in n for n in functions))
         self.assertEqual(
             {n for n in functions if not n.startswith("_")},
-            {"record_query_job", "get_query_job", "list_recent", "main"},
+            {"record_query_job", "get_query_job", "list_recent", "list_usage_for_analytics", "main"},
         )
         signature = inspect.signature(repository.record_query_job)
         self.assertEqual(
@@ -288,6 +288,45 @@ class RepositoryTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(
                 signature.parameters[name].kind, inspect.Parameter.KEYWORD_ONLY
             )
+
+    async def test_analytics_signature_requires_keyword_only_owner(self):
+        signature = inspect.signature(repository.list_usage_for_analytics)
+        self.assertEqual(list(signature.parameters), ["session_factory", "user_id"])
+        self.assertIsNone(signature.parameters["session_factory"].default)
+        owner = signature.parameters["user_id"]
+        self.assertEqual(owner.kind, inspect.Parameter.KEYWORD_ONLY)
+        self.assertEqual(owner.default, inspect.Parameter.empty)
+        with self.assertRaises(TypeError):
+            await repository.list_usage_for_analytics(self.factory)
+        with self.assertRaises(TypeError):
+            await repository.list_usage_for_analytics(self.factory, uuid4())
+        with self.assertRaises(TypeError):
+            await repository.list_usage_for_analytics(self.factory, user_id=None)
+        self.factory.assert_not_called()
+
+    async def test_analytics_selects_only_measurements_with_owner_filter(self):
+        owner = uuid4()
+        row = repository.UsageRow("completed", 12.5, datetime.now(timezone.utc))
+        self.session.execute.return_value = SimpleNamespace(all=lambda: [row])
+        result = await repository.list_usage_for_analytics(self.factory, user_id=owner)
+        self.assertEqual(result, [row])
+        statement = self.session.execute.call_args.args[0]
+        self.assertEqual(
+            list(statement.selected_columns.keys()), ["status", "latency_ms", "created_at"]
+        )
+        compiled = statement.compile(dialect=postgresql.dialect())
+        self.assertIn("WHERE query_jobs.user_id =", str(compiled))
+        self.assertEqual(compiled.params, {"user_id_1": owner})
+        self.factory.assert_called_once_with()
+        self.session.__aexit__.assert_awaited_once()
+        self.session.commit.assert_not_awaited()
+        self.session.add.assert_not_called()
+
+    async def test_analytics_default_factory_returns_empty_without_writes(self):
+        self.session.execute.return_value = SimpleNamespace(all=list)
+        self.assertEqual(await repository.list_usage_for_analytics(user_id=uuid4()), [])
+        self.factory.assert_called_once_with()
+        self.session.commit.assert_not_awaited()
 
     async def test_smoke_real_record_path_roundtrip_and_exact_row_cleanup(self):
         self.session.get.side_effect = lambda *_: (
