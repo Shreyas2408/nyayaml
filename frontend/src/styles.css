@@ -1,0 +1,110 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-saffron: var(--saffron);
+  --color-saffron-foreground: var(--saffron-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.375rem;
+  --background: oklch(0.984 0.003 247.858); /* #f8fafc */
+  --foreground: oklch(0.279 0.041 260.031); /* #1e293b */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.279 0.041 260.031);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.279 0.041 260.031);
+  --primary: oklch(0.279 0.041 260.031);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.955 0.008 250);
+  --secondary-foreground: oklch(0.279 0.041 260.031);
+  --muted: oklch(0.955 0.008 250);
+  --muted-foreground: oklch(0.5 0.03 257);
+  --accent: oklch(0.955 0.03 55);
+  --accent-foreground: oklch(0.45 0.15 45);
+  --saffron: oklch(0.646 0.194 41.116); /* #ea580c */
+  --saffron-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.91 0.012 255);
+  --input: oklch(0.91 0.012 255);
+  --ring: oklch(0.646 0.194 41.116);
+}
+
+.dark {
+  --background: oklch(0.2 0.03 262);
+  --foreground: oklch(0.95 0.005 250);
+  --card: oklch(0.279 0.041 260.031);
+  --card-foreground: oklch(0.95 0.005 250);
+  --popover: oklch(0.279 0.041 260.031);
+  --popover-foreground: oklch(0.95 0.005 250);
+  --primary: oklch(0.95 0.005 250);
+  --primary-foreground: oklch(0.279 0.041 260.031);
+  --secondary: oklch(0.32 0.035 260);
+  --secondary-foreground: oklch(0.95 0.005 250);
+  --muted: oklch(0.32 0.035 260);
+  --muted-foreground: oklch(0.72 0.03 257);
+  --accent: oklch(0.35 0.06 45);
+  --accent-foreground: oklch(0.85 0.12 55);
+  --saffron: oklch(0.7 0.18 45);
+  --saffron-foreground: oklch(0.18 0.03 262);
+  --destructive: oklch(0.68 0.19 22);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.7 0.18 45);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+}
+
+@utility fade-in { animation: nyaya-fade 150ms ease-out; }
+@keyframes nyaya-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@utility legal-prose {
+  font-family: var(--font-serif);
+  line-height: 1.75;
+  & p { margin: 0 0 1em; }
+  & h1, & h2, & h3 { font-weight: 700; margin: 1.2em 0 0.5em; }
+  & h2 { font-size: 1.25rem; }
+  & h3 { font-size: 1.1rem; }
+  & ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1em; }
+  & ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+  & strong { font-weight: 700; }
+  & blockquote { border-left: 3px solid var(--saffron); padding-left: 1em; color: var(--muted-foreground); }
+  & code { font-family: var(--font-mono); font-size: 0.85em; }
+}
