@@ -18,7 +18,7 @@ from typing import Any
 import httpx
 
 FALLBACK_MODEL = "phi3:mini"
-FALLBACK_TIMEOUT_S = 25.0
+FALLBACK_TIMEOUT_S = 60.0
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
 
 

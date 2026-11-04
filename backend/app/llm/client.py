@@ -1,10 +1,10 @@
-"""Primary LLM client: llama3.1:8b, phi3:mini fallback, 60-second wall clock.
+"""Primary LLM client: llama3.1:8b, phi3:mini fallback, 300-second wall clock.
 
 One ``generate`` call never runs longer than ``wall_clock_s``:
 
-1. Try the primary model with its own timeout (default 30 s).
+1. Try the primary model with its own timeout (default 240 s).
 2. If it times out, errors, or returns no text, spend whatever time remains
-   on the smaller fallback model (default cap 25 s).
+   on the smaller fallback model (default cap 60 s).
 3. If neither produces text, raise ``LLMUnavailable`` with every attempt
    recorded, so the caller can log or surface why.
 
@@ -31,8 +31,8 @@ from .fallback import (
 )
 
 PRIMARY_MODEL = "llama3.1:8b"
-PRIMARY_TIMEOUT_S = 30.0
-WALL_CLOCK_S = 60.0
+PRIMARY_TIMEOUT_S = 240.0
+WALL_CLOCK_S = 300.0
 CACHE_LIMIT = 128
 
 

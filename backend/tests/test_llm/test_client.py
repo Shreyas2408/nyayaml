@@ -117,9 +117,9 @@ class OllamaClientTests(unittest.TestCase):
         self.assertIn(FALLBACK_MODEL, str(caught.exception))
 
     def test_wall_clock_blocks_the_fallback(self):
-        # Deadlines: start at 10, primary timeout calculated at 10 (30 s given),
-        # then the clock has jumped to 200, so no budget remains for phi3.
-        times = iter([10.0, 10.0, 200.0])
+        # Deadlines: start at 10, primary timeout calculated at 10 (240 s given),
+        # then the clock has jumped to 400, so no budget remains for phi3.
+        times = iter([10.0, 10.0, 400.0])
         server = ScriptedOllama([httpx.ReadTimeout("primary timed out")])
         client = self.client(server, clock=lambda: next(times))
         with self.assertRaises(LLMUnavailable) as caught:
