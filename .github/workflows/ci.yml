@@ -1,23 +1,43 @@
-name: CI
+name: ci
+
 on:
   push:
     branches: [main]
   pull_request:
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+    timeout-minutes: 20
+    env:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Create development environment
+        run: |
+          cat > .env <<'EOF'
+          POSTGRES_USER=nyayaml
+          POSTGRES_PASSWORD=nyayaml_dev_2026
+          POSTGRES_DB=nyayaml
+          POSTGRES_HOST=postgres
+          SECRET_KEY=placeholder
+          ACCESS_TOKEN_EXPIRE_MINUTES=30
+          REFRESH_TOKEN_EXPIRE_DAYS=7
+          RATE_LIMIT_PER_HOUR=100
+          EOF
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.10"
       - name: Install dependencies
-        run: | 
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r backend/requirements.txt -r backend/requirements-dev.txt
       - name: Ruff lint
-        run: ruff check app tests
+        run: ruff check backend scripts
+      - name: Prepare pinned corpus for offline tests
+        run: |
+          mkdir -p data/processed
+          cp reference/Bns_Bnss_Bsa_2023_final.json data/processed/Bns_Bnss_Bsa_2023_final.json
+      - name: Offline unit tests
+        run: HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python -m unittest discover -s backend/tests -t . -v

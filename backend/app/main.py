@@ -6,6 +6,11 @@ from fastapi import FastAPI
 
 from .retrieval.router import close_retriever, router
 
+from app.analytics.router import router as analytics_router
+from app.auth.router import router as auth_router
+from app.query.router import router as query_router
+from app.sections.router import router as sections_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -182,11 +187,6 @@ def health():
 
 # # 
 # # ── Module Routers (stubs) ─────────────────────────────
-from app.analytics.router import router as analytics_router
-from app.auth.router import router as auth_router
-from app.query.router import router as query_router
-from app.sections.router import router as sections_router
-
 app.include_router(auth_router)
 app.include_router(query_router, prefix="/api/v1/query", tags=["query"])
 app.include_router(sections_router)

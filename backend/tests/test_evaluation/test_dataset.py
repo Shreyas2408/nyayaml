@@ -35,6 +35,10 @@ from backend.app.evaluation.dataset import (
 )
 
 
+@unittest.skipUnless(
+    CITATIONS_PATH.is_file() and CHUNKS_PATH.is_file(),
+    "local generated citations.json and chunks.jsonl required; not shipped in offline CI",
+)
 class DatasetTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
