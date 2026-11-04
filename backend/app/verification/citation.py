@@ -1,6 +1,6 @@
-"""Citation verification — validates cited sections exist and are relevant.
+"""Citation verification — validates citation IDs against the supplied corpus.
 
-A citation ID identifies one section of one ingested act::
+A citation ID identifies one entry of one ingested act::
 
     BNS-2023-ff92dcc72778-S103
     └┬┘ └┬─┘ └────┬─────┘ └┬─┘
@@ -12,6 +12,8 @@ A citation ID identifies one section of one ingested act::
 Verification is syntactic (the ID is well formed) and semantic (the ID exists
 in the corpus the caller supplies). A verifier never guesses: an ID that is
 absent from the corpus is flagged as unresolved rather than silently accepted.
+Hyphen-separated suffixes identify schedule rows, table rows, and forms.
+This verifier receives citation IDs; it does not search the answer text.
 """
 
 import re
@@ -21,7 +23,9 @@ from typing import Iterable
 CitationId = str
 
 _ACTS = "BNS|BNSS|BSA"
-CITATION_PATTERN = re.compile(rf"^(?:{_ACTS})-\d{{4}}-[0-9a-f]{{12}}-S[0-9A-Za-z]+$")
+CITATION_PATTERN = re.compile(
+    rf"^(?:{_ACTS})-\d{{4}}-[0-9a-f]{{12}}-S[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*$"
+)
 
 MALFORMED = "malformed"
 NOT_FOUND = "not_found"

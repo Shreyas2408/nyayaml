@@ -6,6 +6,7 @@ The seam under test is ``parse_llm_response``: one string in, one validated
 
 from __future__ import annotations
 
+import json
 import unittest
 
 from backend.app.llm.structured import (
@@ -14,6 +15,7 @@ from backend.app.llm.structured import (
     SchemaValidationError,
     parse_llm_response,
 )
+from backend.app.verification.citation import CitationVerifier
 
 VALID_BODY = (
     '{"answer": "Murder is defined in BNS section 103.", '
@@ -36,6 +38,25 @@ class ParseLLMResponseTests(unittest.TestCase):
         )
         self.assertEqual(result.citations[0].act, "BNS")
         self.assertEqual(result.citations[0].section, "103")
+
+    def test_canonical_schedule_citations_survive_parsing_and_verification(self):
+        ids = [
+            "BNS-2023-ff92dcc72778-S303",
+            "BNSS-2023-8047fe1de609-SCH1-PART1-P207-R005",
+            "BNSS-2023-8047fe1de609-SCH1-PART1-P213-R010",
+        ]
+        answer = "A paraphrased answer without an inline citation marker."
+        result = parse_llm_response(json.dumps({
+            "answer": answer,
+            "citations": [{"citation_id": cid} for cid in ids],
+            "confidence": 0.9,
+        }))
+        self.assertEqual(result.answer, answer)
+        self.assertEqual([c.citation_id for c in result.citations], ids)
+        report = CitationVerifier(ids).verify_many(c.citation_id for c in result.citations)
+        self.assertEqual(report.verified_ids, ids)
+        self.assertEqual(report.unresolved_ids, [])
+        self.assertTrue(report.is_valid)
 
     def test_markdown_fenced_json_is_parsed(self):
         text = f"```json\n{VALID_BODY}\n```"
